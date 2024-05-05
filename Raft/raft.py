@@ -6,7 +6,7 @@ import random
 import time
 
 # Constants
-ELECTION_TIMEOUT = (5, 10)  # Random election timeout range in seconds
+ELECTION_TIMEOUT = (10, 20)  # Random election timeout range in seconds
 HEARTBEAT_INTERVAL = 1/10      # Interval for leader to send heartbeat
 MAJORITY = 3               # Majority required for log entry commit
 
@@ -69,8 +69,8 @@ class RaftNode:
                 uri_n = peers[i]
                 try:
                     node_n = Pyro5.api.Proxy(f"PYRO:{uri_n['node_id']}@localhost:{uri_n['port']}")
-                    vote_granted = node_n.sayHi()
-                    #vote_granted = node_n.request_vote(self.current_term, self.node_id)
+                    #vote_granted = node_n.sayHi()
+                    vote_granted = node_n.request_vote(self.current_term, self.node_id)
                 except Exception:
                     print(Pyro5.errors.get_pyro_traceback())
 
@@ -102,11 +102,11 @@ class RaftNode:
                 if persisted:
                     ack += 1
 
-            if ack > MAJORITY:
+            if ack >= MAJORITY:
                 self.message = self.uncommited_msg
-                print(f"Message {message['data']} committed to leader {self.node_id}")
+               # print(f"Message {message} committed to leader {self.node_id}")
             else:
-                print(f"Message {message['data']} could not be committed to leader {self.node_id}")
+                print(f"Message {message} could not be committed to leader {self.node_id}")
         else:
             if self.uncommitted_msg == message:
                 self.message = message
@@ -117,7 +117,7 @@ class RaftNode:
         return True
 
     def send_heartbeat(self):
-        print(f"Heart Beat sent by {self.node_id}")
+        #print(f"Heart Beat sent by {self.node_id}")
         self.voted = False
         for uri_n in peers:
             if uri_n["node_id"] != self.node_id:
