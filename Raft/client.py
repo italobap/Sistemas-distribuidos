@@ -1,7 +1,6 @@
 import Pyro5.api
 
 class Client:
-    
 
     def main(self):
         ns = Pyro5.api.locate_ns()
