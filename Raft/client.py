@@ -5,10 +5,11 @@ class Client:
 
     def main(self):
         ns = Pyro5.api.locate_ns()
-        uri_lider = ns.lookup("lider")
+        print(ns.list())
+        uri_lider = ns.lookup("leader")
         lider = Pyro5.client.Proxy(uri_lider)
-        lider.sayHi()
+        lider.append_entries(1)
 
 
-client =  Client()
+client = Client()
 client.main()
