@@ -58,7 +58,7 @@ class RaftNode:
         self.voted = True
         num_votes = 1
         print(f"Election started by {self.node_id}")
-        for i in range(3):
+        for i in range(4):
             if peers[i]['node_id'] != self.node_id:
                 uri_n = peers[i]
                 node_n = Pyro5.api.Proxy(f"PYRO:{uri_n['node_id']}@localhost:{uri_n['port']}")

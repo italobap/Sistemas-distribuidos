@@ -7,7 +7,7 @@ class Client:
         print(ns.list())
         uri_lider = ns.lookup("leader")
         lider = Pyro5.client.Proxy(uri_lider)
-        lider.append_entries("teste")
+        lider.append_entries("sucesso!")
 
 
 client = Client()
