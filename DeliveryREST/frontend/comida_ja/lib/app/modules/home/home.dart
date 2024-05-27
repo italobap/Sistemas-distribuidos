@@ -1,9 +1,9 @@
-import 'package:comida_ja/app/home/home_controller.dart';
 import 'package:comida_ja/ui/common/shared_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../ui/common/color_scheme.dart';
+import '../../../ui/common/color_scheme.dart';
+import 'home_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,6 +70,28 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(
             width: 16,
+          )
+        ],
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 64.0, vertical: 32.0),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(12)),
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                      mainAxisSpacing: 16.0,
+                      crossAxisSpacing: 16.0),
+                  itemCount: homeController.restaurantes.length,
+                  itemBuilder: (context, index) {
+                    return Container();
+                  }),
+            ),
           )
         ],
       ),
