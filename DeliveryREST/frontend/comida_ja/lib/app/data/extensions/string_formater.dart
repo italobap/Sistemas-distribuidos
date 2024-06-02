@@ -97,4 +97,11 @@ extension AppString on String {
       return 0.0;
     }
   }
+
+  String getInitials() {
+    isNotEmpty
+        ? this.trim().split(RegExp(' +')).map((s) => s[0]).take(2).join()
+        : '';
+    return this;
+  }
 }

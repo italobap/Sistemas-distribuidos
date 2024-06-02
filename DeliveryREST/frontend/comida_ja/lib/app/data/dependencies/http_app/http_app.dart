@@ -1,4 +1,4 @@
-import 'package:comida_ja/app/data/extensions/string/string_formater.dart';
+import 'package:comida_ja/app/data/extensions/string_formater.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
