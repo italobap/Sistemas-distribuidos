@@ -1,4 +1,3 @@
-import 'package:comida_ja/app/data/enum/enum_tipo_restaurante.dart';
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
 import 'package:comida_ja/app/data/extensions/string_formater.dart';
 import 'package:comida_ja/ui/common/custom_widgets/hover_button.dart';
@@ -66,75 +65,46 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 64.0, right: 64.0, top: 16.0),
-              child: SizedBox(
-                width: MediaQuery.sizeOf(context).width / 2,
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 8.0,
-                    crossAxisSpacing: 24.0,
-                    childAspectRatio: 1 / .7,
-                  ),
-                  itemCount: EnumTipoComida.values.length,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  // Disable vertical scrolling
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: AssetImage(homeController.imagePaths[index]),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 82.0, right: 64.0),
-              child: Row(
-                children: [
-                  Text(
-                    "Hamburguer",
-                    style: bodyRegular,
-                  ),
-                  const SizedBox(
-                    width: 72,
-                  ),
-                  Text(
-                    "Pizza",
-                    style: bodyRegular,
-                  ),
-                  const SizedBox(
-                    width: 74,
-                  ),
-                  Text(
-                    "Doces & Bolos",
-                    style: bodyRegular,
-                  ),
-                  const SizedBox(
-                    width: 60,
-                  ),
-                  Text(
-                    "Japonesa",
-                    style: bodyRegular,
-                  ),
-                ],
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.only(
+            //       left: AppSize.size(112, context), right: 64.0),
+            //   child: Row(
+            //     children: [
+            //       Text(
+            //         "Hamburguer",
+            //         style: bodyRegular,
+            //       ),
+            //       SizedBox(
+            //         width: AppSize.size(72, context),
+            //       ),
+            //       Text(
+            //         "Pizza",
+            //         style: bodyRegular,
+            //       ),
+            //       const SizedBox(
+            //         width: 74,
+            //       ),
+            //       Text(
+            //         "Doces & Bolos",
+            //         style: bodyRegular,
+            //       ),
+            //       const SizedBox(
+            //         width: 60,
+            //       ),
+            //       Text(
+            //         "Japonesa",
+            //         style: bodyRegular,
+            //       ),
+            //     ],
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 64.0,
                 vertical: 24.0,
               ),
               child: Container(
-                height: MediaQuery.of(context).size.height / 2,
+                height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                     border: Border(
                         top: BorderSide(

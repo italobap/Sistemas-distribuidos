@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:comida_ja/app/data/dependencies/http_app/http_app.dart';
 import 'package:comida_ja/app/data/dependencies/navigation/nav.dart';
 import 'package:comida_ja/app/data/enum/enum_tipo_restaurante.dart';
+import 'package:comida_ja/app/data/models/carrinho/carrinho.dart';
 import 'package:comida_ja/app/data/repositories/restaurante_repository.dart';
 import 'package:comida_ja/app/modules/restaurante/restaurante_page.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +15,10 @@ class HomeController extends ChangeNotifier {
 
   final List<Restaurante> restaurantes = [];
   List<String> imagePaths = [];
+  Carrinho? carrinho;
 
   Future<void> initController() async {
-    imagePaths = [
-      "assets/images/hamburguer.jpg",
-      "assets/images/pizza.jpg",
-      "assets/images/doce.jpg",
-      "assets/images/japonesa.jpg"
-    ];
+    carrinho = Carrinho();
     await getRestaurantes();
     notifyListeners();
   }
@@ -44,10 +41,12 @@ class HomeController extends ChangeNotifier {
 
   void navToCarrinhoPage() {}
 
-  void navToRestaurantePage(Restaurante item, BuildContext context) {
-    Nav.push(context,
+  Future<void> navToRestaurantePage(
+      Restaurante item, BuildContext context) async {
+    carrinho = await Nav.push(context,
         page: RestaurantePage(
           restaurante: item,
         ));
+    notifyListeners();
   }
 }

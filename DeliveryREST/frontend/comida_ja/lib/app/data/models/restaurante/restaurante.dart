@@ -36,7 +36,7 @@ class Restaurante implements BaseModel {
         "id": id,
         "nome": nome,
         "tipoComida": tipoComida,
-        "cardapio": cardapio?.map((x) => x.toMap()).toList(),
+        "cardapio": cardapio.map((x) => x.toMap()).toList(),
         "valorEntrega": valorEntrega,
         "valorAvaliacao": valorAvaliacao,
       };
