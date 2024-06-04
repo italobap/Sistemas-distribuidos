@@ -13,7 +13,7 @@ import '../../data/models/restaurante/restaurante.dart';
 class HomeController extends ChangeNotifier {
   RestauranteRepository repository = RestauranteRepository(httpApp: HttpApp());
 
-  final List<Restaurante> restaurantes = [];
+  List<Restaurante> restaurantes = [];
   List<String> imagePaths = [];
   Carrinho? carrinho;
 
@@ -25,6 +25,8 @@ class HomeController extends ChangeNotifier {
 
   Future<void> getRestaurantes() async {
     var rnd = Random();
+    // restaurantes = await repository.getRestaurantes();
+
     for (int i = 0; i < 8; i++) {
       restaurantes.add(
         Restaurante(

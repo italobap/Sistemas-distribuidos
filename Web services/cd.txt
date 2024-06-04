@@ -1,4 +1,3 @@
-cd Documents\Documentos pessoais\UTFPR\2024-1\Sistemas distribuidos\Avaliações\Sistemas-distribuidos\Web services\restaurant-orders\
 
 1 execução:
 cd flask-backend

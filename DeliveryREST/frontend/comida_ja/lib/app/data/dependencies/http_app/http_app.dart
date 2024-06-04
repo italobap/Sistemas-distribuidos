@@ -48,7 +48,7 @@ class HttpApp implements IHttpApp {
   HttpApp() : _dio = Dio() {
     _dio.options.headers['content-type'] = 'application/json';
     _dio.options.headers['accept'] = 'application/json';
-    _dio.options.headers['Access-Control-Allow-Origin'] = '*';
+    //_dio.options.headers['Access-Control-Allow-Origin'] = '*';
   }
 
   @override

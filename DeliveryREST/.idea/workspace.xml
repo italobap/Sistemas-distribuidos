@@ -4,11 +4,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3e43706f-15d4-4cfa-baa5-1b48f1f522ab" name="Changes" comment="" />
+    <list default="true" id="3e43706f-15d4-4cfa-baa5-1b48f1f522ab" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="ProjectId" id="2h6XVrPKXZqfuJc15rGkhylhRbg" />
   <component name="ProjectViewState">
@@ -22,7 +27,7 @@
     "RunOnceActivity.cidr.known.project.marker": "true",
     "cidr.known.project.marker": "true",
     "dart.analysis.tool.window.visible": "false",
-    "last_opened_file_path": "C:/Facul/8P/Sistemas-distribuidos/DeliveryREST/frontend/comida_ja",
+    "last_opened_file_path": "C:/Desenvolvimento/python/Sistemas-distribuidos/Web services",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
@@ -36,5 +41,16 @@
       <updated>1716915528765</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
