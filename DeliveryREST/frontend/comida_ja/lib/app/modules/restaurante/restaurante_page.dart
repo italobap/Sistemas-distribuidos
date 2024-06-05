@@ -49,7 +49,9 @@ class _RestaurantePageState extends State<RestaurantePage> {
             ),
             actions: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  controller.navToCarrinho(context);
+                },
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -61,7 +63,7 @@ class _RestaurantePageState extends State<RestaurantePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                              "R\$ ${controller.carrinho?.precoTotal.toFormat_2() ?? 0.00.toFormat_2()} "),
+                              "R\$ ${controller.carrinho?.precoTotal.toFormat_2() ?? "0,00"} "),
                           Text(
                               "${controller.carrinho?.itensCarrinho.length ?? 0} itens")
                         ])
@@ -132,7 +134,7 @@ class _RestaurantePageState extends State<RestaurantePage> {
                                           AppColors.neutral.white),
                                     ),
                                     Text(
-                                      " • ${widget.restaurante.tipoComida?.titulo} • R\$ ${widget.restaurante.valorEntrega.toFormat_2()}",
+                                      " • ${widget.restaurante.tipoComida?.titulo} • ${widget.restaurante.valorEntrega != 0 ? "R\$ ${widget.restaurante.valorEntrega.toFormat_2()}" : "Grátis"}",
                                       style: bodySmallColor(
                                           AppColors.neutral.white),
                                     ),

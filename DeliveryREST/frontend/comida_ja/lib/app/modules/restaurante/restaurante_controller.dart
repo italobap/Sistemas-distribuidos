@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:comida_ja/app/data/models/carrinho/carrinho.dart';
 import 'package:comida_ja/app/data/models/item_cardapio/item_cardapio.dart';
+import 'package:comida_ja/app/modules/carrinho/carrinho_page.dart';
 import 'package:flutter/cupertino.dart';
 
+import '../../data/dependencies/navigation/nav.dart';
 import '../../data/models/restaurante/restaurante.dart';
 
 class RestauranteController extends ChangeNotifier {
@@ -33,11 +35,14 @@ class RestauranteController extends ChangeNotifier {
     carrinho ??= Carrinho(
         valorEntrega: restaurante?.valorEntrega ?? 0,
         itensCarrinho: [],
-        precoTotal: restaurante?.valorEntrega ?? 0);
-    for (int i = 0; i < item.numItems; i++) {
-      carrinho?.itensCarrinho.add(item);
-      carrinho?.precoTotal += item.preco;
-    }
+        precoTotal: 0);
+    carrinho?.itensCarrinho.add(item);
+    carrinho?.precoTotal += item.preco * item.numItems;
+
     notifyListeners();
+  }
+
+  Future<void> navToCarrinho(BuildContext context) async {
+    await Nav.push(context, page: CarrinhoPage(carrinho: carrinho));
   }
 }

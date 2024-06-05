@@ -1,8 +1,8 @@
-enum EnumTipoComida{
-  Hamburguer("Hamburguer"),
-  Pizza("Pizza"),
-  Doces("Doces & Bolos"),
-  Japonesa("Japonesa");
+enum EnumTipoComida {
+  hamburguer("Hamburguer"),
+  pizza("Pizza"),
+  doces("Doces & Bolos"),
+  japonesa("Japonesa");
 
   final String titulo;
 
