@@ -114,11 +114,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Container(
                       height: MediaQuery.of(context).size.height,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              top: BorderSide(
-                                  color: AppColors.neutral.medium,
-                                  width: 0.6))),
+                      // decoration: BoxDecoration(
+                      //     border: Border(
+                      //         top: BorderSide(
+                      //             color: AppColors.neutral.medium,
+                      //             width: 0.6))),
                       child: GridView.builder(
                           padding: const EdgeInsets.all(16.0),
                           shrinkWrap: true,
