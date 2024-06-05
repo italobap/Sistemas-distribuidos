@@ -1,5 +1,5 @@
+import 'package:comida_ja/app/data/enum/enum_status_entrega.dart';
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
-import 'package:comida_ja/app/data/models/carrinho/carrinho.dart';
 import 'package:comida_ja/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -7,11 +7,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import '../../../ui/common/color_scheme.dart';
 import '../../../ui/common/shared_styles.dart';
 import '../../data/models/item_cardapio/item_cardapio.dart';
+import '../../data/models/pedido/pedido.dart';
 
 class PedidoPage extends StatefulWidget {
-  const PedidoPage({super.key, required this.carrinho});
+  const PedidoPage({super.key, required this.pedido});
 
-  final Carrinho carrinho;
+  final Pedido pedido;
 
   @override
   State<PedidoPage> createState() => _PedidoPageState();
@@ -95,18 +96,18 @@ class _PedidoPageState extends State<PedidoPage> {
                               ),
                               ListView.builder(
                                   shrinkWrap: true,
-                                  itemCount:
-                                      widget.carrinho.itensCarrinho.length ?? 0,
+                                  itemCount: widget
+                                      .pedido.carrinho?.itensCarrinho.length,
                                   itemBuilder: (context, index) {
-                                    ItemCardapio? item =
-                                        widget.carrinho.itensCarrinho[index];
+                                    ItemCardapio? item = widget
+                                        .pedido.carrinho?.itensCarrinho[index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 4.0),
                                       child: Row(
                                         children: [
                                           Text(
-                                            '${item.numItems}x ${item.nome}',
+                                            '${item?.numItems}x ${item?.nome}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           ),
@@ -114,7 +115,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                             width: 12,
                                           ),
                                           Text(
-                                            '- R\$ ${item.preco.toFormat_2()}',
+                                            '- R\$ ${item?.preco.toFormat_2()}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           )
@@ -126,6 +127,111 @@ class _PedidoPageState extends State<PedidoPage> {
                               Text(
                                 "Entrega:",
                                 style: bodyRegularBold,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                child: Column(
+                                  children: [
+                                    const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Pedido Enviado"),
+                                        Text("Em progresso"),
+                                        Text("A caminho"),
+                                        Text("Entregue"),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 16,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: AppColors.brand.dark,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 7,
+                                            decoration: BoxDecoration(
+                                              color: widget.pedido.status !=
+                                                      EnumStatusEntrega
+                                                          .em_progresso
+                                                  ? AppColors
+                                                      .neutral.mediumLight
+                                                  : AppColors.brand.dark,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: widget.pedido.status !=
+                                                    EnumStatusEntrega
+                                                        .em_progresso
+                                                ? AppColors.neutral.mediumLight
+                                                : AppColors.brand.dark,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 7,
+                                            decoration: BoxDecoration(
+                                              color: widget.pedido.status !=
+                                                      EnumStatusEntrega
+                                                          .a_caminho
+                                                  ? AppColors
+                                                      .neutral.mediumLight
+                                                  : AppColors.brand.dark,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: widget.pedido.status !=
+                                                    EnumStatusEntrega.a_caminho
+                                                ? AppColors.neutral.mediumLight
+                                                : AppColors.brand.dark,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            height: 7,
+                                            decoration: BoxDecoration(
+                                              color: widget.pedido.status !=
+                                                      EnumStatusEntrega.entregue
+                                                  ? AppColors
+                                                      .neutral.mediumLight
+                                                  : AppColors.brand.dark,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 20.0,
+                                          height: 20.0,
+                                          decoration: BoxDecoration(
+                                            color: widget.pedido.status !=
+                                                    EnumStatusEntrega.entregue
+                                                ? AppColors.neutral.mediumLight
+                                                : AppColors.brand.dark,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),

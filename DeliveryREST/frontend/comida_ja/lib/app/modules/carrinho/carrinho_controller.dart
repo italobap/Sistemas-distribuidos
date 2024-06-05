@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../data/dependencies/http_app/http_app.dart';
 import '../../data/dependencies/navigation/nav.dart';
+import '../../data/models/pedido/pedido.dart';
 import '../../data/repositories/carrinho_repository.dart';
 import '../pedido/pedido_page.dart';
 
@@ -11,9 +12,10 @@ class CarrinhoController extends ChangeNotifier {
 
   Future<void> finalizarPedido(Carrinho? carrinho, BuildContext context) async {
     await repository.postCarrinho(carrinho!);
+    Pedido pedido = Pedido(carrinho: carrinho);
     Nav.push(context,
         page: PedidoPage(
-          carrinho: carrinho,
+          pedido: pedido,
         ));
   }
 }
