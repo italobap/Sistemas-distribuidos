@@ -8,7 +8,7 @@ class ItemCardapio implements BaseModel {
     this.preco = 0.0,
     this.descricao,
     this.nome,
-    this.numItems = 1,
+    this.quantidade = 1,
   });
 
   @override
@@ -16,20 +16,23 @@ class ItemCardapio implements BaseModel {
   double preco;
   String? descricao;
   String? nome;
-  int numItems;
+  int quantidade;
 
   @override
   ItemCardapio fromMap(Map<String, dynamic> map) => ItemCardapio(
-    id: map["id"],
-    preco: map["preco"],
-    descricao: map["descricao"],
-    nome: map["nome"],
-  );
+        id: map["id"],
+        preco: map["preco"],
+        descricao: map["descricao"],
+        nome: map["nome"],
+        quantidade: map["quantidade"],
+      );
 
   @override
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "nome": nome,
-    "descricao": descricao,
-  };
+        "id": id,
+        "nome": nome,
+        "descricao": descricao,
+        "preco": preco,
+        "quantidade": quantidade,
+      };
 }

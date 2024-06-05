@@ -1,5 +1,5 @@
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
-import 'package:comida_ja/app/data/models/item_cardapio/item_cardapio.dart';
+import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart';
 import 'package:comida_ja/app/modules/carrinho/carrinho_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -127,7 +127,7 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                           shrinkWrap: true,
                           itemCount: widget.carrinho?.itensCarrinho.length ?? 0,
                           itemBuilder: (context, index) {
-                            ItemCardapio? item =
+                            ItemCarrinho? item =
                                 widget.carrinho?.itensCarrinho[index];
                             return Padding(
                               padding:
@@ -148,11 +148,11 @@ class _CarrinhoPageState extends State<CarrinhoPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        '${item?.numItems}x ${item?.nome}',
+                                        '${item?.quantidade}x ${item?.itemCardapio?.nome}',
                                         style: bodyRegular,
                                       ),
                                       Text(
-                                        'R\$ ${item?.preco.toFormat_2()}',
+                                        'R\$ ${item?.itemCardapio?.preco.toFormat_2()}',
                                         style: bodyRegularBold,
                                       )
                                     ],

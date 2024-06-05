@@ -1,6 +1,6 @@
 import 'package:comida_ja/app/data/models/base_model.dart';
 
-import '../item_cardapio/item_cardapio.dart';
+import 'item_carrinho.dart';
 
 class Carrinho implements BaseModel {
   Carrinho({
@@ -12,7 +12,7 @@ class Carrinho implements BaseModel {
 
   @override
   int? id;
-  List<ItemCardapio> itensCarrinho;
+  List<ItemCarrinho> itensCarrinho;
   double valorEntrega;
   double precoTotal;
 
@@ -21,8 +21,8 @@ class Carrinho implements BaseModel {
       id: map["id"],
       itensCarrinho: map["itensCarrinho"] == null
           ? []
-          : List<ItemCardapio>.from(
-              map["itensCarrinho"].map((x) => ItemCardapio().fromMap(x))),
+          : List<ItemCarrinho>.from(
+              map["itensCarrinho"].map((x) => ItemCarrinho().fromMap(x))),
       valorEntrega: map["valorEntrega"],
       precoTotal: map["precoTotal"]);
 

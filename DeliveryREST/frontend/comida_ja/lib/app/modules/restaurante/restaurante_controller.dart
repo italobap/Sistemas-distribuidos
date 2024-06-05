@@ -1,34 +1,33 @@
-import 'dart:math';
-
+import 'package:comida_ja/app/data/dependencies/http_app/http_app.dart';
 import 'package:comida_ja/app/data/models/carrinho/carrinho.dart';
 import 'package:comida_ja/app/data/models/item_cardapio/item_cardapio.dart';
+import 'package:comida_ja/app/data/repositories/restaurante_repository.dart';
 import 'package:comida_ja/app/modules/carrinho/carrinho_page.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../data/dependencies/navigation/nav.dart';
+import '../../data/models/carrinho/item_carrinho.dart';
 import '../../data/models/restaurante/restaurante.dart';
 
 class RestauranteController extends ChangeNotifier {
+  RestauranteRepository repository = RestauranteRepository(httpApp: HttpApp());
+
   Restaurante? restaurante;
 
   List<ItemCardapio> itensCardapio = [];
 
   Carrinho? carrinho;
 
+  int totalItens = 0;
+
   Future<void> initController(Restaurante restaurante) async {
     this.restaurante = restaurante;
-    getCardapio();
+    await getCardapio();
     notifyListeners();
   }
 
-  void getCardapio() {
-    var rnd = Random();
-    for (int i = 0; i < 5; i++) {
-      itensCardapio.add(ItemCardapio(
-          nome: "Nome $i",
-          preco: rnd.nextDouble() * 10,
-          descricao: "Descrição $i"));
-    }
+  Future<void> getCardapio() async {
+    itensCardapio = await repository.getCardapio(restaurante!.id!);
   }
 
   void addCarrinho(ItemCardapio item) {
@@ -36,13 +35,21 @@ class RestauranteController extends ChangeNotifier {
         valorEntrega: restaurante?.valorEntrega ?? 0,
         itensCarrinho: [],
         precoTotal: 0);
-    carrinho?.itensCarrinho.add(item);
-    carrinho?.precoTotal += item.preco * item.numItems;
-
+    carrinho?.itensCarrinho
+        .add(ItemCarrinho(itemCardapio: item, quantidade: item.quantidade));
+    carrinho?.precoTotal += item.preco * item.quantidade;
+    calcTotalItens();
     notifyListeners();
   }
 
   Future<void> navToCarrinho(BuildContext context) async {
     await Nav.push(context, page: CarrinhoPage(carrinho: carrinho));
+  }
+
+  void calcTotalItens() {
+    totalItens = 0;
+    for (ItemCarrinho item in carrinho!.itensCarrinho) {
+      totalItens += item.quantidade;
+    }
   }
 }

@@ -26,16 +26,16 @@ class Restaurante implements BaseModel {
         id: map["id"],
         nome: map["name"],
         tipoComida: EnumTipoComida.values.byName(map["type"]),
-        // cardapio: map["cardapio"] != null ? [] : [],
-        // valorEntrega: map["valorEntrega"] ?? 0,
-        // valorAvaliacao: map["valorAvaliacao"] ?? 0,
+        cardapio: map["cardapio"] != null ? [] : [],
+        valorEntrega: map["valorEntrega"] ?? 0,
+        valorAvaliacao: map["valorAvaliacao"] ?? 0,
       );
 
   @override
   Map<String, dynamic> toMap() => {
         "id": id,
         "nome": nome,
-        "tipoComida": tipoComida,
+        "tipoComida": tipoComida?.name,
         "cardapio": cardapio.map((x) => x.toMap()).toList(),
         "valorEntrega": valorEntrega,
         "valorAvaliacao": valorAvaliacao,

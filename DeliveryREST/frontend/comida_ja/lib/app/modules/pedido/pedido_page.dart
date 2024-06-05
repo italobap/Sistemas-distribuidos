@@ -1,12 +1,12 @@
 import 'package:comida_ja/app/data/enum/enum_status_entrega.dart';
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
+import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart';
 import 'package:comida_ja/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../ui/common/color_scheme.dart';
 import '../../../ui/common/shared_styles.dart';
-import '../../data/models/item_cardapio/item_cardapio.dart';
 import '../../data/models/pedido/pedido.dart';
 
 class PedidoPage extends StatefulWidget {
@@ -99,7 +99,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                   itemCount: widget
                                       .pedido.carrinho?.itensCarrinho.length,
                                   itemBuilder: (context, index) {
-                                    ItemCardapio? item = widget
+                                    ItemCarrinho? item = widget
                                         .pedido.carrinho?.itensCarrinho[index];
                                     return Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -107,7 +107,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                       child: Row(
                                         children: [
                                           Text(
-                                            '${item?.numItems}x ${item?.nome}',
+                                            '${item?.quantidade}x ${item?.itemCardapio?.nome}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           ),
@@ -115,7 +115,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                             width: 12,
                                           ),
                                           Text(
-                                            '- R\$ ${item?.preco.toFormat_2()}',
+                                            '- R\$ ${item?.itemCardapio?.preco.toFormat_2()}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           )

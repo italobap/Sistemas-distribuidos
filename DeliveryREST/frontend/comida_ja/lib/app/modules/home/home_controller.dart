@@ -5,6 +5,7 @@ import 'package:comida_ja/app/data/repositories/restaurante_repository.dart';
 import 'package:comida_ja/app/modules/restaurante/restaurante_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/models/carrinho/item_carrinho.dart';
 import '../../data/models/restaurante/restaurante.dart';
 
 class HomeController extends ChangeNotifier {
@@ -13,6 +14,7 @@ class HomeController extends ChangeNotifier {
   List<Restaurante> restaurantes = [];
   List<String> imagePaths = [];
   Carrinho? carrinho;
+  int totalItens = 0;
 
   Future<void> initController() async {
     carrinho = Carrinho();
@@ -33,5 +35,12 @@ class HomeController extends ChangeNotifier {
           restaurante: item,
         ));
     notifyListeners();
+  }
+
+  void calcTotalItens() {
+    totalItens = 0;
+    for (ItemCarrinho item in carrinho!.itensCarrinho) {
+      totalItens += item.quantidade;
+    }
   }
 }

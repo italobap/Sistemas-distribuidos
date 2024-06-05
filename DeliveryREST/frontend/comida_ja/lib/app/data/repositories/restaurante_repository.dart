@@ -1,4 +1,5 @@
 import 'package:comida_ja/app/data/dependencies/http_app/http_app.dart';
+import 'package:comida_ja/app/data/models/item_cardapio/item_cardapio.dart';
 import 'package:comida_ja/app/data/models/restaurante/restaurante.dart';
 
 import '../constantes/endpoints.dart';
@@ -16,5 +17,14 @@ class RestauranteRepository {
         (l) => ([]),
         (r) => (List<Restaurante>.from(
             (r as List).map((x) => Restaurante().fromMap(x)))));
+  }
+
+  Future<List<ItemCardapio>> getCardapio(int idRestaurante) async {
+    String url = UrlBase.getUrl() + Endpoints.getCardapio(idRestaurante);
+    final response = await httpApp.get(url);
+    return response.fold(
+        (l) => ([]),
+        (r) => (List<ItemCardapio>.from(
+            (r as List).map((x) => ItemCardapio().fromMap(x)))));
   }
 }

@@ -1,6 +1,8 @@
 class Endpoints {
   static String getRestaurantes = "/restaurants";
-  static String getCardapio = "";
-  static String postPedido = "";
-  static String postCarrinho = "";
+
+  static String getCardapio(int idRestaurante) =>
+      "/restaurants/$idRestaurante/menu";
+  static String postPedido = "/orders";
+  static String postCarrinho = "/cart";
 }
