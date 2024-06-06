@@ -24,7 +24,6 @@ class ItemCardapio implements BaseModel {
         preco: map["preco"],
         descricao: map["descricao"],
         nome: map["nome"],
-        quantidade: map["quantidade"],
       );
 
   @override
@@ -33,6 +32,5 @@ class ItemCardapio implements BaseModel {
         "nome": nome,
         "descricao": descricao,
         "preco": preco,
-        "quantidade": quantidade,
       };
 }
