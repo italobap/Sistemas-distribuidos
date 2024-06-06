@@ -11,7 +11,7 @@ class RestauranteRepository {
   RestauranteRepository({required this.httpApp});
 
   Future<List<Restaurante>> getRestaurantes() async {
-    String url = UrlBase.getUrl() + Endpoints.getRestaurantes;
+    String url = UrlBase.getApiUrl() + Endpoints.getRestaurantes;
     final response = await httpApp.get(url);
     return response.fold(
         (l) => ([]),
@@ -20,7 +20,7 @@ class RestauranteRepository {
   }
 
   Future<List<ItemCardapio>> getCardapio(int idRestaurante) async {
-    String url = UrlBase.getUrl() + Endpoints.getCardapio(idRestaurante);
+    String url = UrlBase.getApiUrl() + Endpoints.getCardapio(idRestaurante);
     final response = await httpApp.get(url);
     return response.fold(
         (l) => ([]),

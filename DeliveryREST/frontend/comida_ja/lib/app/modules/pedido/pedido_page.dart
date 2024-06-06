@@ -4,9 +4,11 @@ import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart';
 import 'package:comida_ja/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:sse_channel/sse_channel.dart';
 
 import '../../../ui/common/color_scheme.dart';
 import '../../../ui/common/shared_styles.dart';
+import '../../data/constantes/url_base.dart';
 import '../../data/models/pedido/pedido.dart';
 
 class PedidoPage extends StatefulWidget {
@@ -20,6 +22,12 @@ class PedidoPage extends StatefulWidget {
 
 class _PedidoPageState extends State<PedidoPage> {
   PedidoController controller = PedidoController();
+
+  @override
+  void initState() {
+    connectToSse();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -244,5 +252,21 @@ class _PedidoPageState extends State<PedidoPage> {
             ),
           );
         });
+  }
+
+  void parseSseEvent(String event) {
+    if (EnumStatusEntrega.values.any((value) => value.toString() == event)) {
+      setState(() {
+        widget.pedido.status = EnumStatusEntrega.values.byName(event);
+      });
+    }
+  }
+
+  void connectToSse() {
+    String url = UrlBase.getSseUrl();
+    final channel = SseChannel.connect(Uri.parse(url));
+    channel.stream.listen((event) {
+      parseSseEvent(event);
+    });
   }
 }

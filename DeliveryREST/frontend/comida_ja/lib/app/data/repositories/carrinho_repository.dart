@@ -12,7 +12,7 @@ class CarrinhoRepository {
   CarrinhoRepository({required this.httpApp});
 
   Future<int?> postCarrinho(Carrinho carrinho) async {
-    String url = UrlBase.getUrl() + Endpoints.postCarrinho;
+    String url = UrlBase.getApiUrl() + Endpoints.postCarrinho;
     Map<String, dynamic> jsonSend = carrinho.toMap();
     jsonEncode(jsonSend);
     final response = await httpApp.post(url, data: jsonSend);
