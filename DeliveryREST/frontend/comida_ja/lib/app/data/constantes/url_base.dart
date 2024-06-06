@@ -4,6 +4,6 @@ class UrlBase {
   }
 
   static String getSseUrl() {
-    return "http://127.0.0.1:5000/sse";
+    return "http://127.0.0.1:5000/events";
   }
 }

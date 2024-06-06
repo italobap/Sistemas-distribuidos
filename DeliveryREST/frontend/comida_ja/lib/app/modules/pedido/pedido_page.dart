@@ -4,7 +4,8 @@ import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart';
 import 'package:comida_ja/app/modules/pedido/pedido_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:sse_channel/sse_channel.dart';
+// import 'package:sse_channel/sse_channel.dart';
+import 'package:eventsource/eventsource.dart';
 
 import '../../../ui/common/color_scheme.dart';
 import '../../../ui/common/shared_styles.dart';
@@ -250,9 +251,9 @@ class _PedidoPageState extends State<PedidoPage> {
                 ),
               ),
             ),
-          );
+      );
         });
-  }
+}
 
   void parseSseEvent(String event) {
     if (EnumStatusEntrega.values.any((value) => value.toString() == event)) {
@@ -262,11 +263,11 @@ class _PedidoPageState extends State<PedidoPage> {
     }
   }
 
-  void connectToSse() {
+  Future<void> connectToSse() async {
     String url = UrlBase.getSseUrl();
-    final channel = SseChannel.connect(Uri.parse(url));
-    channel.stream.listen((event) {
-      parseSseEvent(event);
+    final eventSource = await EventSource.connect(Uri.parse(url));
+    eventSource.listen((Event event) {
+      parseSseEvent(event as String);
     });
   }
 }
