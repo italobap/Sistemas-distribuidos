@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models import db, Restaurant, MenuItem, Cart, CartItem, Order
+import requests
 
 bp = Blueprint('api', __name__)
 
@@ -111,7 +112,7 @@ def add_to_cart():
         db.session.add(cart)
         db.session.commit()
     for item in data['items']:
-        menu_item = MenuItem.query.get_or_404(item['id'])
+        menu_item = MenuItem.query.get_or_404(item['itemCardapio']['id'])
         cart_item = CartItem(menu_item_id=menu_item.id, quantidade=item['quantidade'], cart_id=cart.id)
         db.session.add(cart_item)
         cart.preco_total += menu_item.preco * item['quantidade'] + menu_item.preco
@@ -132,7 +133,7 @@ def get_cart():
 @bp.route('/orders', methods=['POST'])
 def place_order():
     data = request.get_json()
-    cart = Cart.query.get_or_404(data['cart_id'])
+    cart = Cart.query.get_or_404(data['carrinho']['id'])
     order = Order(cart_id=cart.id, status='em_progresso')
     db.session.add(order)
     db.session.commit()
@@ -157,4 +158,11 @@ def update_order_status(id):
     order = Order.query.get_or_404(id)
     order.status = data.get('status', order.status)
     db.session.commit()
+    # Notify clients about the status update
+    notify_clients(order.id, order.status)
     return jsonify({'order_id': order.id, 'status': order.status}), 200
+
+def notify_clients(order_id, status):
+    message = f"Order {order_id} status updated to {status}"
+    # Assuming notify endpoint is set up to receive notifications
+    requests.post('http://127.0.0.1:5000/notify', json={'message': message})

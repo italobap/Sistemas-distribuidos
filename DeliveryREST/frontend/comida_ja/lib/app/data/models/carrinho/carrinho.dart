@@ -19,17 +19,17 @@ class Carrinho implements BaseModel {
   @override
   Carrinho fromMap(Map<String, dynamic> map) => Carrinho(
       id: map["id"],
-      itensCarrinho: map["itensCarrinho"] == null
+      itensCarrinho: map["items"] == null
           ? []
           : List<ItemCarrinho>.from(
-              map["itensCarrinho"].map((x) => ItemCarrinho().fromMap(x))),
+              map["items"].map((x) => ItemCarrinho().fromMap(x))),
       valorEntrega: map["valorEntrega"],
       precoTotal: map["precoTotal"]);
 
   @override
   Map<String, dynamic> toMap() => {
         "id": id,
-        "itensCarrinho": itensCarrinho.map((x) => x.toMap()).toList(),
+        "items": itensCarrinho.map((x) => x.toMap()).toList(),
         "valorEntrega": valorEntrega,
         "precoTotal": precoTotal,
       };

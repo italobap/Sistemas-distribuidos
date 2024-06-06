@@ -18,11 +18,13 @@ class ItemCarrinho implements BaseModel {
   ItemCarrinho fromMap(Map<String, dynamic> map) => ItemCarrinho(
         id: map["id"],
         itemCardapio: ItemCardapio().fromMap(map["itemCardapio"]),
+        quantidade: map["quantidade"],
       );
 
   @override
   Map<String, dynamic> toMap() => {
         "id": id,
         "itemCardapio": itemCardapio?.toMap(),
+        "quantidade": quantidade,
       };
 }

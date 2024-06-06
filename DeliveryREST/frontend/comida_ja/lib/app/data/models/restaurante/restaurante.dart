@@ -24,8 +24,8 @@ class Restaurante implements BaseModel {
   @override
   Restaurante fromMap(Map<String, dynamic> map) => Restaurante(
         id: map["id"],
-        nome: map["name"],
-        tipoComida: EnumTipoComida.values.byName(map["type"]),
+        nome: map["nome"],
+        tipoComida: EnumTipoComida.values.byName(map["tipoComida"]),
         cardapio: map["cardapio"] != null ? [] : [],
         valorEntrega: map["valorEntrega"] ?? 0,
         valorAvaliacao: map["valorAvaliacao"] ?? 0,
