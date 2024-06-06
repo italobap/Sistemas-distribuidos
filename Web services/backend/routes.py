@@ -1,8 +1,14 @@
+import requests
 from flask import Blueprint, request, jsonify
 from models import db, Restaurant, MenuItem, Cart, CartItem, Order
-import requests
 
 bp = Blueprint('api', __name__)
+
+# Function to notify clients about status changes
+def notify_clients(order_id, status):
+    message = f"Order {order_id} status updated to {status}"
+    # Assuming notify endpoint is set up to receive notifications
+    requests.post('http://127.0.0.1:5000/notify', json={'message': message})
 
 # Restaurant routes
 @bp.route('/restaurants', methods=['GET'])
@@ -162,7 +168,11 @@ def update_order_status(id):
     notify_clients(order.id, order.status)
     return jsonify({'order_id': order.id, 'status': order.status}), 200
 
-def notify_clients(order_id, status):
-    message = f"Order {order_id} status updated to {status}"
-    # Assuming notify endpoint is set up to receive notifications
-    requests.post('http://127.0.0.1:5000/notify', json={'message': message})
+@bp.route('/orders/<int:id>/status', methods=['POST'])
+def change_order_status(id):
+    data = request.get_json()
+    order = Order.query.get_or_404(id)
+    order.status = data['status']
+    db.session.commit()
+    notify_clients(order.id, order.status)
+    return jsonify({'order_id': order.id, 'status': order.status}), 200
