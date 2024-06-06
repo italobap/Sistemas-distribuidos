@@ -12,7 +12,7 @@ class PedidoRepository {
   PedidoRepository({required this.httpApp});
 
   Future<bool> postPedido(Pedido pedido) async {
-    String url = UrlBase.getUrl() + Endpoints.postPedido;
+    String url = UrlBase.getApiUrl() + Endpoints.postPedido;
     Map<String, dynamic> jsonSend = pedido.toMap();
     jsonEncode(jsonSend);
     final response = await httpApp.post(url, data: jsonSend);
