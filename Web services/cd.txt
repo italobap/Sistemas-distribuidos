@@ -1,21 +1,17 @@
-cd Documents\Documentos pessoais\UTFPR\2024-1\Sistemas distribuidos\Avaliações\Sistemas-distribuidos\Web services\backend
+cd Documents\Documentos pessoais\UTFPR\2024-1\Sistemas distribuidos\Avaliações\Sistemas-distribuidos\Web services\flaskbackend
 
 1 execução:
-cd flask-backend
 python -m venv venv
 venv\Scripts\activate
-pip install flask flask_sqlalchemy cryptography
+pip install flask flask_sqlalchemy cryptography flask_cors requests
 flask run
 
 Todas as outras execuções
-cd flask-backend
 venv\Scripts\activate
 flask run
 
-cd ../react-frontend
-npm start
 
-restaurantes (id,nome, tipo =hamburguer, doce, japonesa, pizza)
-itens cardápio do restaurante selecionado (id, nome, descrição, preço, preço de entrega e uma avaliação ( 0 a 5 float))
-carrinho (id, itens cardapio, preço total (preço dos itens + preço da entrega))
-pedido(id,restaurante, status( feito, andamento e pronto))
+
+/api/orders/<order_id>
+{"status": "a_caminho"}
+PUT

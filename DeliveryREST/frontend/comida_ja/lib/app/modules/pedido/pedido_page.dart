@@ -44,7 +44,7 @@ class _PedidoPageState extends State<PedidoPage> {
               elevation: 2,
               shape: Border(
                   bottom:
-                      BorderSide(color: AppColors.neutral.medium, width: 0.6)),
+                  BorderSide(color: AppColors.neutral.medium, width: 0.6)),
               title: Text(
                 "Comida Já",
                 style: bodyLarge,
@@ -53,7 +53,7 @@ class _PedidoPageState extends State<PedidoPage> {
             body: SingleChildScrollView(
               child: Padding(
                 padding:
-                    const EdgeInsets.only(left: 64.0, right: 64.0, top: 32.0),
+                const EdgeInsets.only(left: 64.0, right: 64.0, top: 32.0),
                 child: Container(
                   decoration: BoxDecoration(
                     boxShadow: [
@@ -78,12 +78,12 @@ class _PedidoPageState extends State<PedidoPage> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Acompanhe seu pedido: ",
                                     style:
-                                        bodyLargeColor(AppColors.neutral.white),
+                                    bodyLargeColor(AppColors.neutral.white),
                                   ),
                                 ],
                               ),
@@ -116,7 +116,8 @@ class _PedidoPageState extends State<PedidoPage> {
                                       child: Row(
                                         children: [
                                           Text(
-                                            '${item?.quantidade}x ${item?.itemCardapio?.nome}',
+                                            '${item?.quantidade}x ${item
+                                                ?.itemCardapio?.nome}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           ),
@@ -124,7 +125,8 @@ class _PedidoPageState extends State<PedidoPage> {
                                             width: 12,
                                           ),
                                           Text(
-                                            '- R\$ ${item?.itemCardapio?.preco.toFormat_2()}',
+                                            '- R\$ ${item?.itemCardapio?.preco
+                                                .toFormat_2()}',
                                             style: bodyRegularColor(
                                                 AppColors.neutral.medium),
                                           )
@@ -139,12 +141,12 @@ class _PedidoPageState extends State<PedidoPage> {
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 16),
+                                const EdgeInsets.symmetric(vertical: 16),
                                 child: Column(
                                   children: [
                                     const Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text("Pedido Enviado"),
                                         Text("Em progresso"),
@@ -170,10 +172,10 @@ class _PedidoPageState extends State<PedidoPage> {
                                             height: 7,
                                             decoration: BoxDecoration(
                                               color: widget.pedido.status !=
-                                                      EnumStatusEntrega
-                                                          .em_progresso
+                                                  EnumStatusEntrega
+                                                      .em_progresso
                                                   ? AppColors
-                                                      .neutral.mediumLight
+                                                  .neutral.mediumLight
                                                   : AppColors.brand.dark,
                                             ),
                                           ),
@@ -183,8 +185,8 @@ class _PedidoPageState extends State<PedidoPage> {
                                           height: 20.0,
                                           decoration: BoxDecoration(
                                             color: widget.pedido.status !=
-                                                    EnumStatusEntrega
-                                                        .em_progresso
+                                                EnumStatusEntrega
+                                                    .em_progresso
                                                 ? AppColors.neutral.mediumLight
                                                 : AppColors.brand.dark,
                                             shape: BoxShape.circle,
@@ -195,10 +197,10 @@ class _PedidoPageState extends State<PedidoPage> {
                                             height: 7,
                                             decoration: BoxDecoration(
                                               color: widget.pedido.status !=
-                                                      EnumStatusEntrega
-                                                          .a_caminho
+                                                  EnumStatusEntrega
+                                                      .a_caminho
                                                   ? AppColors
-                                                      .neutral.mediumLight
+                                                  .neutral.mediumLight
                                                   : AppColors.brand.dark,
                                             ),
                                           ),
@@ -208,7 +210,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                           height: 20.0,
                                           decoration: BoxDecoration(
                                             color: widget.pedido.status !=
-                                                    EnumStatusEntrega.a_caminho
+                                                EnumStatusEntrega.a_caminho
                                                 ? AppColors.neutral.mediumLight
                                                 : AppColors.brand.dark,
                                             shape: BoxShape.circle,
@@ -219,9 +221,9 @@ class _PedidoPageState extends State<PedidoPage> {
                                             height: 7,
                                             decoration: BoxDecoration(
                                               color: widget.pedido.status !=
-                                                      EnumStatusEntrega.entregue
+                                                  EnumStatusEntrega.entregue
                                                   ? AppColors
-                                                      .neutral.mediumLight
+                                                  .neutral.mediumLight
                                                   : AppColors.brand.dark,
                                             ),
                                           ),
@@ -231,7 +233,7 @@ class _PedidoPageState extends State<PedidoPage> {
                                           height: 20.0,
                                           decoration: BoxDecoration(
                                             color: widget.pedido.status !=
-                                                    EnumStatusEntrega.entregue
+                                                EnumStatusEntrega.entregue
                                                 ? AppColors.neutral.mediumLight
                                                 : AppColors.brand.dark,
                                             shape: BoxShape.circle,
@@ -251,23 +253,39 @@ class _PedidoPageState extends State<PedidoPage> {
                 ),
               ),
             ),
-      );
+          );
         });
-}
+  }
 
+  // void parseSseEvent(String event) {
+  //   if (EnumStatusEntrega.values.any((value) => value.toString() == event)) {
+  //     setState(() {
+  //       widget.pedido.status = EnumStatusEntrega.values.byName(event);
+  //     });
+  //   }
+  // }
   void parseSseEvent(String event) {
-    if (EnumStatusEntrega.values.any((value) => value.toString() == event)) {
-      setState(() {
-        widget.pedido.status = EnumStatusEntrega.values.byName(event);
+    final parts = event.split(':');
+    if (parts.length == 2 && int.parse(parts[0]) == widget.pedido.id) {
+      final status = parts[1];
+      if (EnumStatusEntrega.values.any((value) =>
+      value.toString() == 'EnumStatusEntrega.$status')) {
+        setState(() {
+          widget.pedido.status =
+              EnumStatusEntrega.values.firstWhere((value) =>
+              value.toString() ==
+                  'EnumStatusEntrega.$status');
+        });
+      }
+    }
+  }
+
+    Future<void> connectToSse() async {
+      String url = UrlBase.getSseUrl();
+      final eventSource = await EventSource.connect(Uri.parse(url));
+      eventSource.listen((Event event) {
+        parseSseEvent(event as String);
       });
     }
   }
 
-  Future<void> connectToSse() async {
-    String url = UrlBase.getSseUrl();
-    final eventSource = await EventSource.connect(Uri.parse(url));
-    eventSource.listen((Event event) {
-      parseSseEvent(event as String);
-    });
-  }
-}

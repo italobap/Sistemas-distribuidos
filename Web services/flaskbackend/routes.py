@@ -1,14 +1,14 @@
 import requests
 from flask import Blueprint, request, jsonify
 from models import db, Restaurant, MenuItem, Cart, CartItem, Order
+from flask_sse import sse
 
 bp = Blueprint('api', __name__)
-
-# Function to notify clients about status changes
-def notify_clients(order_id, status):
-    message = f"Order {order_id} status updated to {status}"
-    # Assuming notify endpoint is set up to receive notifications
-    requests.post('http://127.0.0.1:5000/notify', json={'message': message})
+    
+def server_side_event():
+    """ Function to publish server side event """
+    with app.app_context():
+        sse.publish(get_data(), type='dataUpdate')
 
 # Restaurant routes
 @bp.route('/restaurants', methods=['GET'])
@@ -164,15 +164,27 @@ def update_order_status(id):
     order = Order.query.get_or_404(id)
     order.status = data.get('status', order.status)
     db.session.commit()
-    # Notify clients about the status update
-    notify_clients(order.id, order.status)
+    server_side_event()
     return jsonify({'order_id': order.id, 'status': order.status}), 200
 
-@bp.route('/orders/<int:id>/status', methods=['POST'])
-def change_order_status(id):
-    data = request.get_json()
-    order = Order.query.get_or_404(id)
-    order.status = data['status']
-    db.session.commit()
-    notify_clients(order.id, order.status)
-    return jsonify({'order_id': order.id, 'status': order.status}), 200
+@bp.route('/cart', methods=['DELETE'])
+def delete_all_cart_items():
+    try:
+        num_deleted = CartItem.query.delete()
+        db.session.commit()
+        return jsonify({'message': f'Deleted {num_deleted} cart items'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@bp.route('/orders', methods=['DELETE'])
+def delete_all_orders():
+    try:
+        num_deleted_orders = Order.query.delete()
+        num_deleted_cart_items = CartItem.query.delete()
+        num_deleted_carts = Cart.query.delete()
+        db.session.commit()
+        return jsonify({'message': f'Deleted {num_deleted_orders} orders, {num_deleted_cart_items} cart items, and {num_deleted_carts} carts'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
