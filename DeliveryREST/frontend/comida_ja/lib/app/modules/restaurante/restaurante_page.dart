@@ -64,7 +64,8 @@ class _RestaurantePageState extends State<RestaurantePage> {
                         children: [
                           Text(
                               "R\$ ${controller.carrinho?.precoTotal.toFormat_2() ?? "0,00"} "),
-                          Text("${controller.totalItens} itens")
+                          Text(
+                              "${controller.carrinho?.itensCarrinho.length ?? 0} itens")
                         ])
                   ],
                 ),

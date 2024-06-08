@@ -1,11 +1,11 @@
+import 'dart:convert';
+
 import 'package:comida_ja/app/data/enum/enum_status_entrega.dart';
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
-import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart';
-import 'package:comida_ja/app/modules/pedido/pedido_controller.dart';
+import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart'; // import 'package:sse_channel/sse_channel.dart';
+import 'package:eventsource/eventsource.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-// import 'package:sse_channel/sse_channel.dart';
-import 'package:eventsource/eventsource.dart';
 
 import '../../../ui/common/color_scheme.dart';
 import '../../../ui/common/shared_styles.dart';
@@ -22,8 +22,6 @@ class PedidoPage extends StatefulWidget {
 }
 
 class _PedidoPageState extends State<PedidoPage> {
-  PedidoController controller = PedidoController();
-
   @override
   void initState() {
     connectToSse();
@@ -32,260 +30,227 @@ class _PedidoPageState extends State<PedidoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: controller,
-        builder: (c, w) {
-          return Scaffold(
-            appBar: AppBar(
-              leading: Icon(
-                MdiIcons.food,
-              ),
-              backgroundColor: AppColors.neutral.white,
-              elevation: 2,
-              shape: Border(
-                  bottom:
-                  BorderSide(color: AppColors.neutral.medium, width: 0.6)),
-              title: Text(
-                "Comida Já",
-                style: bodyLarge,
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(
+          MdiIcons.food,
+        ),
+        backgroundColor: AppColors.neutral.white,
+        elevation: 2,
+        shape: Border(
+            bottom: BorderSide(color: AppColors.neutral.medium, width: 0.6)),
+        title: Text(
+          "Comida Já",
+          style: bodyLarge,
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 64.0, right: 64.0, top: 32.0),
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                ),
+              ],
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding:
-                const EdgeInsets.only(left: 64.0, right: 64.0, top: 32.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                      ),
-                    ],
-                  ),
-                  child: Column(
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
+                  color: AppColors.brand.darker,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Container(
-                        height: 60,
-                        color: AppColors.brand.darker,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0, horizontal: 16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Acompanhe seu pedido: ",
-                                    style:
-                                    bodyLargeColor(AppColors.neutral.white),
-                                  ),
-                                ],
-                              ),
-                            )
+                            Text(
+                              "Acompanhe seu pedido: ",
+                              style: bodyLargeColor(AppColors.neutral.white),
+                            ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        color: AppColors.neutral.white,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Informações do pedido:",
-                                style: bodyRegularBold,
-                              ),
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: widget
-                                      .pedido.carrinho?.itensCarrinho.length,
-                                  itemBuilder: (context, index) {
-                                    ItemCarrinho? item = widget
-                                        .pedido.carrinho?.itensCarrinho[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            '${item?.quantidade}x ${item
-                                                ?.itemCardapio?.nome}',
-                                            style: bodyRegularColor(
-                                                AppColors.neutral.medium),
-                                          ),
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Text(
-                                            '- R\$ ${item?.itemCardapio?.preco
-                                                .toFormat_2()}',
-                                            style: bodyRegularColor(
-                                                AppColors.neutral.medium),
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }),
-                              Divider(),
-                              Text(
-                                "Entrega:",
-                                style: bodyRegularBold,
-                              ),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 16),
-                                child: Column(
-                                  children: [
-                                    const Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text("Pedido Enviado"),
-                                        Text("Em progresso"),
-                                        Text("A caminho"),
-                                        Text("Entregue"),
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      height: 16,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: AppColors.brand.dark,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 7,
-                                            decoration: BoxDecoration(
-                                              color: widget.pedido.status !=
-                                                  EnumStatusEntrega
-                                                      .em_progresso
-                                                  ? AppColors
-                                                  .neutral.mediumLight
-                                                  : AppColors.brand.dark,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: widget.pedido.status !=
-                                                EnumStatusEntrega
-                                                    .em_progresso
-                                                ? AppColors.neutral.mediumLight
-                                                : AppColors.brand.dark,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 7,
-                                            decoration: BoxDecoration(
-                                              color: widget.pedido.status !=
-                                                  EnumStatusEntrega
-                                                      .a_caminho
-                                                  ? AppColors
-                                                  .neutral.mediumLight
-                                                  : AppColors.brand.dark,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: widget.pedido.status !=
-                                                EnumStatusEntrega.a_caminho
-                                                ? AppColors.neutral.mediumLight
-                                                : AppColors.brand.dark,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 7,
-                                            decoration: BoxDecoration(
-                                              color: widget.pedido.status !=
-                                                  EnumStatusEntrega.entregue
-                                                  ? AppColors
-                                                  .neutral.mediumLight
-                                                  : AppColors.brand.dark,
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 20.0,
-                                          height: 20.0,
-                                          decoration: BoxDecoration(
-                                            color: widget.pedido.status !=
-                                                EnumStatusEntrega.entregue
-                                                ? AppColors.neutral.mediumLight
-                                                : AppColors.brand.dark,
-                                            shape: BoxShape.circle,
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
                         ),
                       )
                     ],
                   ),
                 ),
-              ),
+                Container(
+                  color: AppColors.neutral.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Informações do pedido:",
+                          style: bodyRegularBold,
+                        ),
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount:
+                                widget.pedido.carrinho?.itensCarrinho.length,
+                            itemBuilder: (context, index) {
+                              ItemCarrinho? item =
+                                  widget.pedido.carrinho?.itensCarrinho[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 4.0),
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${item?.quantidade}x ${item?.itemCardapio?.nome}',
+                                      style: bodyRegularColor(
+                                          AppColors.neutral.medium),
+                                    ),
+                                    const SizedBox(
+                                      width: 12,
+                                    ),
+                                    Text(
+                                      '- R\$ ${item?.itemCardapio?.preco.toFormat_2()}',
+                                      style: bodyRegularColor(
+                                          AppColors.neutral.medium),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }),
+                        Divider(),
+                        Text(
+                          "Entrega:",
+                          style: bodyRegularBold,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Column(
+                            children: [
+                              const Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Pedido Enviado"),
+                                  Text("Em progresso"),
+                                  Text("A caminho"),
+                                  Text("Entregue"),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.brand.dark,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: 7,
+                                      decoration: BoxDecoration(
+                                        color: widget.pedido.status !=
+                                                EnumStatusEntrega.em_progresso
+                                            ? AppColors.neutral.mediumLight
+                                            : AppColors.brand.dark,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                      color: widget.pedido.status !=
+                                              EnumStatusEntrega.em_progresso
+                                          ? AppColors.neutral.mediumLight
+                                          : AppColors.brand.dark,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: 7,
+                                      decoration: BoxDecoration(
+                                        color: widget.pedido.status !=
+                                                EnumStatusEntrega.a_caminho
+                                            ? AppColors.neutral.mediumLight
+                                            : AppColors.brand.dark,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                      color: widget.pedido.status !=
+                                              EnumStatusEntrega.a_caminho
+                                          ? AppColors.neutral.mediumLight
+                                          : AppColors.brand.dark,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      height: 7,
+                                      decoration: BoxDecoration(
+                                        color: widget.pedido.status !=
+                                                EnumStatusEntrega.entregue
+                                            ? AppColors.neutral.mediumLight
+                                            : AppColors.brand.dark,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    width: 20.0,
+                                    height: 20.0,
+                                    decoration: BoxDecoration(
+                                      color: widget.pedido.status !=
+                                              EnumStatusEntrega.entregue
+                                          ? AppColors.neutral.mediumLight
+                                          : AppColors.brand.dark,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-          );
-        });
+          ),
+        ),
+      ),
+    );
   }
 
-  // void parseSseEvent(String event) {
-  //   if (EnumStatusEntrega.values.any((value) => value.toString() == event)) {
-  //     setState(() {
-  //       widget.pedido.status = EnumStatusEntrega.values.byName(event);
-  //     });
-  //   }
-  // }
-  void parseSseEvent(String event) {
-    final parts = event.split(':');
-    if (parts.length == 2 && int.parse(parts[0]) == widget.pedido.id) {
-      final status = parts[1];
-      if (EnumStatusEntrega.values.any((value) =>
-      value.toString() == 'EnumStatusEntrega.$status')) {
-        setState(() {
-          widget.pedido.status =
-              EnumStatusEntrega.values.firstWhere((value) =>
-              value.toString() ==
-                  'EnumStatusEntrega.$status');
-        });
-      }
-    }
-  }
+  void parseSseEvent(String event) {}
 
-    Future<void> connectToSse() async {
-      String url = UrlBase.getSseUrl();
-      final eventSource = await EventSource.connect(Uri.parse(url));
+  Future<void> connectToSse() async {
+    String url = UrlBase.getSseUrl();
+    EventSource eventSource;
+    try {
+      eventSource = await EventSource.connect(url);
       eventSource.listen((Event event) {
-        parseSseEvent(event as String);
+        var data = jsonDecode(event.data!);
+        print("The server says " + data.message);
       });
+    } catch (e) {
+      print('Failed to connect to SSE: $e');
     }
   }
-
+}

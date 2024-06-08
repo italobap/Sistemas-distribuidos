@@ -1,14 +1,11 @@
 import requests
 from flask import Blueprint, request, jsonify
+
+from flaskbackend.app import server_side_event
 from models import db, Restaurant, MenuItem, Cart, CartItem, Order
 from flask_sse import sse
-
 bp = Blueprint('api', __name__)
     
-def server_side_event():
-    """ Function to publish server side event """
-    with app.app_context():
-        sse.publish(get_data(), type='dataUpdate')
 
 # Restaurant routes
 @bp.route('/restaurants', methods=['GET'])

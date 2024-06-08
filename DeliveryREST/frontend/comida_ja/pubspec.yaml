@@ -39,7 +39,7 @@ dependencies:
   dio: ^5.2.1+1
   dartz: ^0.10.1
   intl: 0.19.0
-  #sse_channel: 0.1.1
+  collection: ^1.16.0
   eventsource: ^0.4.0
 
 

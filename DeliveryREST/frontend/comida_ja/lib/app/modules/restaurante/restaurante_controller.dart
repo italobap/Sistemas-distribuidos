@@ -35,21 +35,24 @@ class RestauranteController extends ChangeNotifier {
         valorEntrega: restaurante?.valorEntrega ?? 0,
         itensCarrinho: [],
         precoTotal: 0);
-    carrinho?.itensCarrinho
-        .add(ItemCarrinho(itemCardapio: item, quantidade: item.quantidade));
+
+    ItemCarrinho newItem =
+        ItemCarrinho(itemCardapio: item, quantidade: item.quantidade);
+
+    final index = carrinho!.itensCarrinho
+        .indexWhere((item) => item.itemCardapio == newItem.itemCardapio);
+
+    if (index != -1) {
+      carrinho!.itensCarrinho[index].quantidade += newItem.quantidade;
+    } else {
+      carrinho?.itensCarrinho.add(newItem);
+    }
+
     carrinho?.precoTotal += item.preco * item.quantidade;
-    calcTotalItens();
     notifyListeners();
   }
 
   Future<void> navToCarrinho(BuildContext context) async {
     await Nav.push(context, page: CarrinhoPage(carrinho: carrinho));
-  }
-
-  void calcTotalItens() {
-    totalItens = 0;
-    for (ItemCarrinho item in carrinho!.itensCarrinho) {
-      totalItens += item.quantidade;
-    }
   }
 }

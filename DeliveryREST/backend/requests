@@ -1,0 +1,54 @@
+POST Menu:
+  {
+    "nome": "Combo Queen",
+    "descricao": "Queen Burguer, batata e bebida.",
+    "preco": 35.99
+  }
+
+  {
+    "nome": "Combo King",
+    "descricao": "King Burguer, batata e bebida.",
+    "preco": 41.99
+  }
+
+  {
+    "nome": "Pizza de Marguerita",
+    "descricao": "Manjericão, queijo e molho de tomate.",
+    "preco": 49.98
+  }
+
+  {
+    "nome": "Pizza de Pepperoni",
+    "descricao": "Pepperoni, queijo e molho de tomate.",
+    "preco": 53.98
+  }
+
+POST Restaurante:
+  {
+    "nome": "Burguer Kingdom",
+    "tipoComida": "hamburguer",
+    "valorEntrega": 12.99,
+    "valorAvaliacao": 4.5
+  }
+
+  {
+    "nome": "Pizza House",
+    "tipoComida": "pizza",
+    "valorEntrega": 6.99,
+    "valorAvaliacao": 4.8
+  }
+
+  {
+        "id": 3,
+        "nome": "Sushi Place",
+        "tipoComida": "japonesa",
+        "valorAvaliacao": 4.4,
+        "valorEntrega": 0.0
+  }
+
+  {
+    "nome": "Doces da Cláudia",
+    "tipoComida": "doces",
+    "valorEntrega": 2.99,
+    "valorAvaliacao": 5.0
+  }

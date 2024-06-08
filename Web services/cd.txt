@@ -3,7 +3,7 @@ cd Documents\Documentos pessoais\UTFPR\2024-1\Sistemas distribuidos\Avaliações
 1 execução:
 python -m venv venv
 venv\Scripts\activate
-pip install flask flask_sqlalchemy cryptography flask_cors requests
+pip install flask flask_sqlalchemy flask_cors requests flask_sse
 flask run
 
 Todas as outras execuções

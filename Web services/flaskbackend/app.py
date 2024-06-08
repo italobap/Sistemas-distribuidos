@@ -6,6 +6,11 @@ from models import db, Restaurant, MenuItem, Cart, CartItem, Order
 from routes import bp as api_bp
 import time
 
+def server_side_event():
+    """ Function to publish server side event """
+    with app.app_context():
+        sse.publish('', type='dataUpdate')
+
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurant.db'
 db.init_app(app)

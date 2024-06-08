@@ -1,15 +1,26 @@
-from flask import Flask
-from models import db
-from routes import bp as api_bp
-from sse import sse_bp
+import datetime
+
+from flask import Flask, request, jsonify, Response
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_sse import sse
+from models import db, Restaurant, MenuItem, Cart, CartItem, Order
+from routes import bp as api_bp
+import time
+
+
+def server_side_event():
+    with app.app_context():
+        sse.publish('teste', type='publish')
+
 
 app = Flask(__name__)
-CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///restaurant.db'
 db.init_app(app)
+CORS(app)
+app.config["REDIS_URL"] = "redis://127.0.0.1"
+app.register_blueprint(sse, url_prefix='/events')
 app.register_blueprint(api_bp, url_prefix='/api')
-app.register_blueprint(sse_bp, url_prefix='/sse')
 
 with app.app_context():
     db.create_all()
