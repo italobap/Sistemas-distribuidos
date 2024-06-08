@@ -171,7 +171,7 @@ def get_cart():
 def place_order():
     data = request.get_json()
     cart = Cart.query.get_or_404(data['carrinho']['id'])
-    order = Order(cart_id=cart.id, status='em_progresso')
+    order = Order(cart_id=cart.id, status='enviado')
     db.session.add(order)
     db.session.commit()
     return jsonify({'order_id': order.id, 'status': order.status}), 201
@@ -196,7 +196,7 @@ def update_order_status(id):
     order = Order.query.get_or_404(id)
     order.status = data.get('status', order.status)
     db.session.commit()
-    server_side_event()
+    server_side_event(order.status)
     return jsonify({'order_id': order.id, 'status': order.status}), 200
 
 @bp.route('/cart', methods=['DELETE'])

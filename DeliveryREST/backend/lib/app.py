@@ -9,9 +9,9 @@ from routes import bp as api_bp
 import time
 
 
-def server_side_event():
+def server_side_event(data):
     with app.app_context():
-        sse.publish('teste', type='publish')
+        sse.publish(data, type='dataUpdate')
 
 
 app = Flask(__name__)

@@ -1,9 +1,8 @@
-import 'dart:convert';
+import 'dart:html';
 
 import 'package:comida_ja/app/data/enum/enum_status_entrega.dart';
 import 'package:comida_ja/app/data/extensions/double_formater.dart';
 import 'package:comida_ja/app/data/models/carrinho/item_carrinho.dart'; // import 'package:sse_channel/sse_channel.dart';
-import 'package:eventsource/eventsource.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -159,8 +158,9 @@ class _PedidoPageState extends State<PedidoPage> {
                                     child: Container(
                                       height: 7,
                                       decoration: BoxDecoration(
-                                        color: widget.pedido.status !=
-                                                EnumStatusEntrega.em_progresso
+                                        color: widget.pedido.status.index <
+                                                EnumStatusEntrega
+                                                    .em_progresso.index
                                             ? AppColors.neutral.mediumLight
                                             : AppColors.brand.dark,
                                       ),
@@ -170,8 +170,9 @@ class _PedidoPageState extends State<PedidoPage> {
                                     width: 20.0,
                                     height: 20.0,
                                     decoration: BoxDecoration(
-                                      color: widget.pedido.status !=
-                                              EnumStatusEntrega.em_progresso
+                                      color: widget.pedido.status.index <
+                                              EnumStatusEntrega
+                                                  .em_progresso.index
                                           ? AppColors.neutral.mediumLight
                                           : AppColors.brand.dark,
                                       shape: BoxShape.circle,
@@ -181,8 +182,9 @@ class _PedidoPageState extends State<PedidoPage> {
                                     child: Container(
                                       height: 7,
                                       decoration: BoxDecoration(
-                                        color: widget.pedido.status !=
-                                                EnumStatusEntrega.a_caminho
+                                        color: widget.pedido.status.index <
+                                                EnumStatusEntrega
+                                                    .a_caminho.index
                                             ? AppColors.neutral.mediumLight
                                             : AppColors.brand.dark,
                                       ),
@@ -192,8 +194,8 @@ class _PedidoPageState extends State<PedidoPage> {
                                     width: 20.0,
                                     height: 20.0,
                                     decoration: BoxDecoration(
-                                      color: widget.pedido.status !=
-                                              EnumStatusEntrega.a_caminho
+                                      color: widget.pedido.status.index <
+                                              EnumStatusEntrega.a_caminho.index
                                           ? AppColors.neutral.mediumLight
                                           : AppColors.brand.dark,
                                       shape: BoxShape.circle,
@@ -238,19 +240,17 @@ class _PedidoPageState extends State<PedidoPage> {
     );
   }
 
-  void parseSseEvent(String event) {}
+  void parseSseEvent(Event event) {
+    MessageEvent messageEvent = event as MessageEvent;
+    setState(() {
+      widget.pedido.status = EnumStatusEntrega.values.byName(messageEvent.data);
+    });
+  }
 
   Future<void> connectToSse() async {
     String url = UrlBase.getSseUrl();
-    EventSource eventSource;
-    try {
-      eventSource = await EventSource.connect(url);
-      eventSource.listen((Event event) {
-        var data = jsonDecode(event.data!);
-        print("The server says " + data.message);
-      });
-    } catch (e) {
-      print('Failed to connect to SSE: $e');
-    }
+    final eventSource = EventSource(url);
+    eventSource.addEventListener(
+        'dataUpdate', (Event event) => parseSseEvent(event));
   }
 }
