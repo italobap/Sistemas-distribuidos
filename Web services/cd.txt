@@ -10,7 +10,7 @@ Todas as outras execuções
 venv\Scripts\activate
 flask run
 
-
+sudo service redis-server start
 
 /api/orders/<order_id>
 {"status": "a_caminho"}

@@ -1,11 +1,10 @@
 import requests
 from flask import Blueprint, request, jsonify
-
-from flaskbackend.app import server_side_event
+from sqlalchemy.dialects.sqlite import json
+from sqlalchemy.exc import SQLAlchemyError
 from models import db, Restaurant, MenuItem, Cart, CartItem, Order
-from flask_sse import sse
+
 bp = Blueprint('api', __name__)
-    
 
 # Restaurant routes
 @bp.route('/restaurants', methods=['GET'])
@@ -21,15 +20,32 @@ def get_restaurants():
 
 @bp.route('/restaurants', methods=['POST'])
 def create_restaurant():
-    data = request.get_json()
-    new_restaurant = Restaurant(
-        nome=data['nome'],
-        tipo_comida=data['tipoComida'],
-        valor_entrega=data['valorEntrega'],
-        valor_avaliacao=data['valorAvaliacao']
-    )
-    db.session.add(new_restaurant)
-    db.session.commit()
+    try:
+        data = request.get_json()
+    except json.JSONDecodeError:
+        return jsonify({"error": "JSON inválido"}), 400
+
+    required_fields = ['nome', 'tipoComida', 'valorEntrega', 'valorAvaliacao']
+    for field in required_fields:
+        if field not in data:
+            return jsonify({"error": f"Campo obrigatório {field} não informado"}), 400
+    try:
+        new_restaurant = Restaurant(
+            nome=data['nome'],
+            tipo_comida=data['tipoComida'],
+            valor_entrega=data['valorEntrega'],
+            valor_avaliacao=data['valorAvaliacao']
+        )
+
+        if new_restaurant.tipo_comida not in ['hamburguer', 'pizza', 'doces', 'japonesa']:
+            return jsonify({"error": "Tipo comida inválido!"}), 400
+
+        db.session.add(new_restaurant)
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
     return jsonify({'id': new_restaurant.id}), 201
 
 @bp.route('/restaurants/<int:id>', methods=['GET'])
@@ -70,7 +86,6 @@ def get_menu_items(id):
         'nome': item.nome,
         'descricao': item.descricao,
         'preco': item.preco,
-        'quantidade': item.quantidade
     } for item in items]), 200
 
 @bp.route('/restaurants/<int:id>/menu', methods=['POST'])
@@ -80,7 +95,6 @@ def add_menu_item(id):
         nome=data['nome'],
         descricao=data['descricao'],
         preco=data['preco'],
-        quantidade=data['quantidade'],
         restaurant_id=id
     )
     db.session.add(new_item)
@@ -88,18 +102,17 @@ def add_menu_item(id):
     return jsonify({'id': new_item.id}), 201
 
 @bp.route('/restaurants/<int:id>/menu/<int:item_id>', methods=['PUT'])
-def update_menu_item(id, item_id):
+def update_menu_item(item_id):
     data = request.get_json()
     item = MenuItem.query.get_or_404(item_id)
     item.nome = data.get('nome', item.nome)
     item.descricao = data.get('descricao', item.descricao)
     item.preco = data.get('preco', item.preco)
-    item.quantidade = data.get('quantidade', item.quantidade)
     db.session.commit()
     return jsonify({'id': item.id}), 200
 
 @bp.route('/restaurants/<int:id>/menu/<int:item_id>', methods=['DELETE'])
-def delete_menu_item(id, item_id):
+def delete_menu_item(item_id):
     item = MenuItem.query.get_or_404(item_id)
     db.session.delete(item)
     db.session.commit()
@@ -108,19 +121,40 @@ def delete_menu_item(id, item_id):
 # Cart routes
 @bp.route('/cart', methods=['POST'])
 def add_to_cart():
-    data = request.get_json()
-    cart = Cart.query.first()  # Simplified: assuming a single cart for demonstration
-    if not cart:
-        cart = Cart(valor_entrega=0, preco_total=0)
-        db.session.add(cart)
-        db.session.commit()
+    try:
+        data = request.get_json()
+    except json.JSONDecodeError:
+        return jsonify({"error": "Invalid JSON"}), 400
+
+    new_cart = Cart(valor_entrega=data["valorEntrega"], preco_total=0)
+    db.session.add(new_cart)
+    db.session.commit()
     for item in data['items']:
         menu_item = MenuItem.query.get_or_404(item['itemCardapio']['id'])
-        cart_item = CartItem(menu_item_id=menu_item.id, quantidade=item['quantidade'], cart_id=cart.id)
+        cart_item = CartItem(menu_item_id=menu_item.id, quantidade=item['quantidade'], cart_id=new_cart.id)
         db.session.add(cart_item)
-        cart.preco_total += menu_item.preco * item['quantidade'] + menu_item.preco
+        new_cart.preco_total += menu_item.preco * item['quantidade']
+
+    try:
+        db.session.commit()
+    except SQLAlchemyError as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    # Now that the Cart object is committed, it has an assigned id
+    return jsonify({'cart_id': new_cart.id, 'preco_total': new_cart.preco_total}), 201
+@bp.route('/restaurants/<int:id>/menu', methods=['POST'])
+def add_cart_item(id):
+    data = request.get_json()
+    new_item = MenuItem(
+        nome=data['nome'],
+        descricao=data['descricao'],
+        preco=data['preco'],
+        restaurant_id=id
+    )
+    db.session.add(new_item)
     db.session.commit()
-    return jsonify({'cart_id': cart.id, 'preco_total': cart.preco_total}), 201
+    return jsonify({'id': new_item.id}), 201
 
 @bp.route('/cart', methods=['GET'])
 def get_cart():
@@ -137,7 +171,7 @@ def get_cart():
 def place_order():
     data = request.get_json()
     cart = Cart.query.get_or_404(data['carrinho']['id'])
-    order = Order(cart_id=cart.id, status='em_progresso')
+    order = Order(cart_id=cart.id, status='enviado')
     db.session.add(order)
     db.session.commit()
     return jsonify({'order_id': order.id, 'status': order.status}), 201
@@ -157,11 +191,12 @@ def get_order(id):
 
 @bp.route('/orders/<int:id>', methods=['PUT'])
 def update_order_status(id):
+    from app import server_side_event
     data = request.get_json()
     order = Order.query.get_or_404(id)
     order.status = data.get('status', order.status)
     db.session.commit()
-    server_side_event()
+    server_side_event(order.status)
     return jsonify({'order_id': order.id, 'status': order.status}), 200
 
 @bp.route('/cart', methods=['DELETE'])
